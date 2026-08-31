@@ -19,8 +19,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// CORS configuration supporting both local development and your live Vercel URL
+
 const allowedOrigins = [
+    'https://ar-meridian-careers-mern-stack-job.vercel.app',
     'https://ar-meridian-careers-mern-stack-job-portal.vercel.app',
     'http://localhost:5173',
     'http://localhost:3000'
