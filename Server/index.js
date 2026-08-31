@@ -7,36 +7,49 @@ import userRouter from "./routes/user.routes.js";
 import companyRouter from "./routes/company.routes.js";
 import jobRouter from "./routes/job.routes.js";
 import applicantionRouter from "./routes/application.routes.js";
+
 dotenv.config({});
 
 const app = express();
 
-connectDB()
+connectDB();
 
 // middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// CORS configuration supporting both local development and your live Vercel URL
+const allowedOrigins = [
+    'https://ar-meridian-careers-mern-stack-job-portal.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000'
+];
+
 const corsOptions = {
-    origin: process.env.FRONTEND_URL || 'https://ar-meridian-careers-mern-stack-job.vercel.app/',
-    credentials: true,
-}
+    origin: function (origin, callback) {
+        // allow requests with no origin (like mobile apps or postman)
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+};
 app.use(cors(corsOptions));
 
-app.get("/",(req,res)=>{
+app.get("/", (req, res) => {
     res.send("Welcome to the server");
-})
+});
 
 const PORT = process.env.PORT || 3000;
-
 
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/company", companyRouter);
 app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/application", applicantionRouter);
 
-
 app.listen(PORT, () => {
-    
     console.log(`Server running at port ${PORT}`);
-})
+});
