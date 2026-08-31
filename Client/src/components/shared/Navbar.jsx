@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Button } from '../ui/button'
 import { Avatar, AvatarImage } from '../ui/avatar'
-import { BriefcaseBusiness, BuildingIcon, HomeIcon, LogOut, MenuIcon, SearchCheck, User2, Download } from 'lucide-react'
+import { BriefcaseBusiness, BuildingIcon, HomeIcon, LogOut, MenuIcon, SearchCheck, User2, Download, Sun, Moon } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'sonner'
 import axios from 'axios'
@@ -18,6 +18,22 @@ const Navbar = () => {
     const navigate = useNavigate();
 
     const { user } = useSelector(store => store.auth);
+
+    // Dark/Light Mode state logic
+    const [darkMode, setDarkMode] = useState(false);
+
+    useEffect_darkMode_handler: {
+        // Optional: you can sync with localStorage or document class here if needed
+        if (darkMode) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }
+
+    const toggleDarkMode = () => {
+        setDarkMode(!darkMode);
+    }
 
     const logoutHandler = async () => {
         try {
@@ -40,7 +56,7 @@ const Navbar = () => {
     }
 
     return (
-        <div className='bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100'>
+        <div className='bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-50 border-b border-gray-100 dark:border-gray-800 transition-colors'>
             <div className='flex items-center justify-between mx-auto h-20 px-4 sm:px-[6%] lg:px-[10%]'>
                 
                 {/* Logo Section with Image Space & Stacked Text */}
@@ -55,7 +71,7 @@ const Navbar = () => {
 
                 {/* Desktop Nav Links */}
                 <div className='hidden sm:flex items-center gap-6 lg:gap-8'>
-                    <ul className='flex font-semibold items-center gap-6 lg:gap-8 text-gray-700'>
+                    <ul className='flex font-semibold items-center gap-6 lg:gap-8 text-gray-700 dark:text-gray-200'>
                         {
                             user && user.role === "recruiter"
                                 ? (
@@ -85,6 +101,15 @@ const Navbar = () => {
                         <span className='hidden lg:inline'>Download App</span>
                     </a>
 
+                    {/* Dark/Light Mode Toggle Button */}
+                    <button 
+                        onClick={toggleDarkMode} 
+                        className='p-2.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-yellow-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer shadow-sm'
+                        title="Toggle Theme"
+                    >
+                        {darkMode ? <Sun className='w-4 h-4' /> : <Moon className='w-4 h-4' />}
+                    </button>
+
                     {/* Auth Buttons or Profile Avatar */}
                     {
                         !user
@@ -105,13 +130,13 @@ const Navbar = () => {
                                             <AvatarImage src={user?.profile?.profilePhoto || "https://github.com/shadcn.png"} alt="profile" />
                                         </Avatar>
                                     </PopoverTrigger>
-                                    <PopoverContent className="w-80 p-4 shadow-xl rounded-2xl border-gray-100">
-                                        <div className='flex gap-4 items-center border-b pb-3'>
+                                    <PopoverContent className="w-80 p-4 shadow-xl rounded-2xl border-gray-100 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                                        <div className='flex gap-4 items-center border-b dark:border-gray-800 pb-3'>
                                             <Avatar className="w-12 h-12">
                                                 <AvatarImage src={user?.profile?.profilePhoto || "https://github.com/shadcn.png"} alt="profile" />
                                             </Avatar>
                                             <div>
-                                                <h4 className='font-bold text-gray-900'>{user?.fullname}</h4>
+                                                <h4 className='font-bold text-gray-900 dark:text-white'>{user?.fullname}</h4>
                                                 <p className='text-xs text-muted-foreground line-clamp-1'>
                                                     {user?.profile?.bio || "No bio added yet"}
                                                 </p>
@@ -119,12 +144,12 @@ const Navbar = () => {
                                         </div>
                                         <div className='flex flex-col gap-1 mt-3'>
                                             {user && user?.role === "student" && (
-                                                <Link to="/profile" className='flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 text-gray-700 font-medium transition-colors'>
+                                                <Link to="/profile" className='flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium transition-colors'>
                                                     <User2 className='w-4 h-4 text-[#0284C7]' />
                                                     <span>View Profile</span>
                                                 </Link>
                                             )}
-                                            <button onClick={logoutHandler} className='flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 text-red-600 font-medium w-full text-left transition-colors cursor-pointer'>
+                                            <button onClick={logoutHandler} className='flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 text-red-600 font-medium w-full text-left transition-colors cursor-pointer'>
                                                 <LogOut className='w-4 h-4' />
                                                 <span>Logout</span>
                                             </button>
@@ -136,7 +161,7 @@ const Navbar = () => {
                 </div>
 
                 {/* Mobile Menu Trigger & Header Download */}
-                <div className='sm:hidden flex items-center gap-3'>
+                <div className='sm:hidden flex items-center gap-2'>
                     <a 
                         href="/downloads/meridian-app.apk" 
                         download="Meridian_Jobs.apk"
@@ -146,23 +171,31 @@ const Navbar = () => {
                         <Download className='w-5 h-5' />
                     </a>
 
+                    {/* Mobile Dark Mode Toggle */}
+                    <button 
+                        onClick={toggleDarkMode} 
+                        className='p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-yellow-400'
+                    >
+                        {darkMode ? <Sun className='w-5 h-5' /> : <Moon className='w-5 h-5' />}
+                    </button>
+
                     <Popover>
                         <PopoverTrigger asChild>
-                            <Button variant="ghost" size="icon" className="text-gray-700">
+                            <Button variant="ghost" size="icon" className="text-gray-700 dark:text-gray-200">
                                 <MenuIcon className='w-6 h-6' />
                             </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-64 p-4 shadow-xl rounded-2xl">
+                        <PopoverContent className="w-64 p-4 shadow-xl rounded-2xl dark:bg-gray-900 dark:border-gray-800 dark:text-white">
                             <div className='flex flex-col gap-4'>
                                 {
                                     user && user.role === "recruiter"
                                         ? (
                                             <>
-                                                <div onClick={() => navigate("/admin/companies")} className='flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg'>
+                                                <div onClick={() => navigate("/admin/companies")} className='flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg'>
                                                     <BuildingIcon className='w-5 h-5 text-[#0284C7]' />
                                                     <span className='font-medium'>Companies</span>
                                                 </div>
-                                                <div onClick={() => navigate("/admin/jobs")} className='flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg'>
+                                                <div onClick={() => navigate("/admin/jobs")} className='flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg'>
                                                     <BriefcaseBusiness className='w-5 h-5 text-[#0284C7]' />
                                                     <span className='font-medium'>Jobs</span>
                                                 </div>
@@ -170,15 +203,15 @@ const Navbar = () => {
                                         )
                                         : (
                                             <>
-                                                <div onClick={() => { navigate("/"); resetQuery(); }} className='flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg'>
+                                                <div onClick={() => { navigate("/"); resetQuery(); }} className='flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg'>
                                                     <HomeIcon className='w-5 h-5 text-[#0284C7]' />
                                                     <span className='font-medium'>Home</span>
                                                 </div>
-                                                <div onClick={() => navigate("/jobs")} className='flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg'>
+                                                <div onClick={() => navigate("/jobs")} className='flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg'>
                                                     <BriefcaseBusiness className='w-5 h-5 text-[#0284C7]' />
                                                     <span className='font-medium'>Jobs</span>
                                                 </div>
-                                                <div onClick={() => { navigate("/browse"); resetQuery(); }} className='flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg'>
+                                                <div onClick={() => { navigate("/browse"); resetQuery(); }} className='flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg'>
                                                     <SearchCheck className='w-5 h-5 text-[#0284C7]' />
                                                     <span className='font-medium'>Browse</span>
                                                 </div>
@@ -188,14 +221,14 @@ const Navbar = () => {
                                 <a 
                                     href="/downloads/meridian-app.apk" 
                                     download="Meridian_Jobs.apk"
-                                    className='flex items-center gap-3 cursor-pointer p-2 bg-blue-50 text-[#0284C7] rounded-lg font-semibold'
+                                    className='flex items-center gap-3 cursor-pointer p-2 bg-blue-50 dark:bg-blue-950/40 text-[#0284C7] rounded-lg font-semibold'
                                 >
                                     <Download className='w-5 h-5' />
                                     <span>Download App (.APK)</span>
                                 </a>
 
                                 {!user && (
-                                    <div className='flex flex-col gap-2 pt-2 border-t'>
+                                    <div className='flex flex-col gap-2 pt-2 border-t dark:border-gray-800'>
                                         <Link to="/login"><Button variant="outline" className="w-full border-[#0284C7] text-[#0284C7]">Login</Button></Link>
                                         <Link to="/signup"><Button className="w-full bg-[#FFB703] hover:bg-[#e0a102] text-black font-bold">Signup</Button></Link>
                                     </div>

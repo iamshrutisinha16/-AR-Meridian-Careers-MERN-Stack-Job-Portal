@@ -13,12 +13,6 @@ import { Avatar, AvatarImage } from './ui/avatar'
 import { LogOut, User2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-
-// const jobs = [
-//     1, 2, 3, 4, 5, 6, 7, 8, 9, 10
-// ]
-
-
 function Jobs() {
 
     const dispatch = useDispatch();
@@ -32,37 +26,30 @@ function Jobs() {
 
     const [isFilterBoxOpen, setIsFilterBoxOpen] = useState(false);
 
-
-
-
     useEffect(() => {
-
         if (searchedQuery) {
             const filteredJob = allJobs.filter((job) => {
-                return job?.title.toLowerCase().includes(searchedQuery.toLowerCase()) ||
-                    job?.description.toLowerCase().includes(searchedQuery.toLowerCase()) ||
-                    job?.location.toLowerCase().includes(searchedQuery.toLowerCase())
-                // job?.company.toLowerCase().includes(searchedQuery.toLowerCase())
-            })
-            setFilterJobs(filteredJob)
-            // dispatch(setSearchedQuery(""));
-
-
+                return (
+                    job?.title?.toLowerCase().includes(searchedQuery.toLowerCase()) ||
+                    job?.description?.toLowerCase().includes(searchedQuery.toLowerCase()) ||
+                    job?.location?.toLowerCase().includes(searchedQuery.toLowerCase()) ||
+                    job?.jobType?.toLowerCase().includes(searchedQuery.toLowerCase()) ||
+                    job?.salary?.toString().toLowerCase().includes(searchedQuery.toLowerCase()) ||
+                    job?.position?.toString().toLowerCase().includes(searchedQuery.toLowerCase())
+                );
+            });
+            setFilterJobs(filteredJob);
         }
         else {
-            setFilterJobs(allJobs)
+            setFilterJobs(allJobs);
         }
-
-    }, [allJobs, searchedQuery])
-
+    }, [allJobs, searchedQuery]);
 
     useEffect(() => {
         return () => {
             dispatch(setSearchedQuery(""));
-            console.log("trr");
-
         }
-    }, [dispatch])
+    }, [dispatch]);
 
     return (
         <>
@@ -71,9 +58,7 @@ function Jobs() {
                 <div className=' sm:flex gap-5 mx-0 px-0 '>
                     <div className='sm:min-w-[169px] max-sm:hidden'>
                         <FilterCard />
-
                     </div>
-
 
                     <div className='sm:hidden'>
                         <div className='text-right my-4' onClick={() => setIsFilterBoxOpen(!isFilterBoxOpen)}>
@@ -91,13 +76,9 @@ function Jobs() {
                                     <FilterCard />
                                     <hr />
                                 </>
-
                             }
                         </motion.div>
                     </div>
-
-
-
 
                     <div className="w-full">
                         {
@@ -118,18 +99,10 @@ function Jobs() {
                                         }
                                     </div>
                                 </div>
-
                         }
                     </div>
-
                 </div>
-
-
-
             </div>
-
-
-
             <Footer />
         </>
     )
