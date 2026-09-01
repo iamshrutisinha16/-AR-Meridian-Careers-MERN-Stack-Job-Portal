@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { Label } from './ui/label'
 import { useDispatch } from 'react-redux'
 import { setSearchedQuery } from '@/redux/jobSlice'
 import useGetAllJobs from '@/hooks/useGetAllJobs'
 
-// B2B Manufacturing & FMCG Product Company specific filters for AR Meridian
 const filterData = [
     {
         filterType: "Location",
-        array: ["Delhi NCR", "Noida Plant", "Gurugram", "Mumbai", "Hyderabad", "Patna", "International / Export"]
+        array: ["Bangalore / Remote", "Delhi NCR", "Noida Plant", "Gurugram", "Mumbai", "Hyderabad", "Patna", "International / Export"]
     },
     {
         filterType: "Industry",
-        array: ["Production & Manufacturing", "Quality Control (QC)", "Supply Chain & Logistics", "B2B Sales & Marketing", "Chemical Formulation", "Packaging & Dispatch"]
+        array: ["Production & Manufacturing", "Quality Control (QC)", "Supply Chain & Logistics", "B2B Sales & Marketing", "Chemical Formulation", "Packaging & Dispatch", "Senior Manager"]
     },
     {
         filterType: "Salary",
@@ -29,11 +28,8 @@ const FilterCard = () => {
 
     const changeHandler = (value) => {
         setSelectedValue(value);
+        dispatch(setSearchedQuery(value)); // Yahan direct dispatch karein jab user select kare
     }
-
-    useEffect(() => {
-        dispatch(setSearchedQuery(selectedValue))
-    }, [selectedValue, dispatch])
 
     return (
         <div className='w-full bg-white p-4 shadow-sm rounded-xl border border-gray-100'>
@@ -41,7 +37,10 @@ const FilterCard = () => {
                 <h1 className='font-bold text-lg text-gray-900'>Filter Jobs</h1>
                 {selectedValue && (
                     <button 
-                        onClick={() => setSelectedValue("")} 
+                        onClick={() => {
+                            setSelectedValue("");
+                            dispatch(setSearchedQuery("")); // Yahan clear karne par dispatch karein
+                        }} 
                         className='text-xs text-[#0284C7] hover:underline font-semibold cursor-pointer'
                     >
                         Clear Filter
@@ -73,5 +72,5 @@ const FilterCard = () => {
         </div>
     )
 }
-
+ 
 export default FilterCard

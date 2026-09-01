@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Navbar from './shared/Navbar';
 import { Avatar, AvatarImage } from './ui/avatar';
 import { Button } from './ui/button';
-import { Contact, Mail, Pen, Briefcase, FileText, CheckCircle2 } from 'lucide-react';
+import { Contact, Mail, Pen, Briefcase, FileText, Factory } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { Label } from './ui/label';
 import AppliedJobTable from './AppliedJobTable';
@@ -66,19 +66,34 @@ function Profile() {
 
                             <hr className='border-gray-100 my-6' />
 
-                            {/* Contact & Details Grid */}
-                            <div className='grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700 mb-6'>
+                            {/* Contact, Experience & Department Grid */}
+                            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-700 mb-6'>
                                 <div className='flex items-center gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100'>
                                     <div className='p-2 bg-[#0284C7]/10 text-[#0284C7] rounded-lg'>
                                         <Mail className='w-4 h-4' />
                                     </div>
                                     <span className='font-medium truncate'>{user?.email || "NA"}</span>
                                 </div>
+
                                 <div className='flex items-center gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100'>
                                     <div className='p-2 bg-[#FFB703]/20 text-[#d99b00] rounded-lg'>
                                         <Contact className='w-4 h-4' />
                                     </div>
                                     <span className='font-medium'>{user?.phoneNumber || "NA"}</span>
+                                </div>
+
+                                <div className='flex items-center gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100'>
+                                    <div className='p-2 bg-emerald-500/10 text-emerald-600 rounded-lg'>
+                                        <Briefcase className='w-4 h-4' />
+                                    </div>
+                                    <span className='font-medium'>{user?.profile?.experience !== undefined ? `${user?.profile?.experience} Years Exp.` : "0 Years"}</span>
+                                </div>
+
+                                <div className='flex items-center gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100'>
+                                    <div className='p-2 bg-purple-500/10 text-purple-600 rounded-lg'>
+                                        <Factory className='w-4 h-4' />
+                                    </div>
+                                    <span className='font-medium truncate'>{user?.profile?.department || "No Department"}</span>
                                 </div>
                             </div>
 

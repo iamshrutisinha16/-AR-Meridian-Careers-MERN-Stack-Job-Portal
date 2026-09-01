@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import Navbar from './shared/Navbar'
 import HeroSection from './HeroSection'
 import CategoryCarousel from './CategoryCarousel'
+import ExploreCities from './ExploreCities'
 import RoleCategorySection from './RoleCategorySection'
 import TrustAndCompanies from './TrustAndCompanies'
 import LatestJobs from './LatestJobs'
@@ -36,6 +37,7 @@ const Home = () => {
       <Navbar />
       <HeroSection />
       <CategoryCarousel />
+      <ExploreCities />
       <RoleCategorySection />
       <TrustAndCompanies />
       <LatestJobs />

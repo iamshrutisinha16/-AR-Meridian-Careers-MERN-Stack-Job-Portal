@@ -8,14 +8,16 @@ import { motion } from "framer-motion"
 
 function HeroSection() {
     const [keyword, setKeyword] = useState("");
+    const [experience, setExperience] = useState("");
     const [location, setLocation] = useState("");
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const searchJobHandler = () => {
-        const finalQuery = location ? `${keyword} ${location}` : keyword;
+        const queryParts = [keyword, experience, location].filter(Boolean);
+        const finalQuery = queryParts.join(" ");
         dispatch(setSearchedQuery(finalQuery));
-        navigate("/browse");
+        navigate("/jobs");
     }
 
     return (
@@ -50,16 +52,16 @@ function HeroSection() {
                             Discover 50 lakh+ career opportunities with top employers, startups, and trusted global brands.
                         </p>
 
-                        {/* Search Container */}
-                        <div className='w-full bg-white shadow-2xl rounded-2xl sm:rounded-full border border-gray-200 p-2 flex flex-col sm:flex-row items-center gap-2 mt-4'>
+                        {/* Search Container - Fully responsive row layout across all screens */}
+                        <div className='w-full bg-white shadow-2xl rounded-2xl sm:rounded-full border border-gray-200 p-2 flex flex-row items-center gap-1 sm:gap-2 mt-4'>
                             
                             {/* Keyword Input */}
-                            <div className='flex items-center gap-3 w-full px-4 py-3 sm:py-2.5 border-b sm:border-b-0 sm:border-r border-gray-100'>
-                                <Search className='w-5 h-5 text-[#0284C7] shrink-0' />
+                            <div className='flex items-center gap-1.5 sm:gap-3 w-1/3 min-w-0 px-2 sm:px-4 py-2.5 border-r border-gray-100'>
+                                <Search className='w-4 h-4 sm:w-5 sm:h-5 text-[#0284C7] shrink-0' />
                                 <input 
                                     type="text"
-                                    placeholder='Search role, skill...'
-                                    className='outline-none border-none w-full text-gray-900 placeholder:text-gray-400 text-xs sm:text-sm bg-transparent font-medium'
+                                    placeholder='Role, skill...'
+                                    className='outline-none border-none w-full text-gray-900 placeholder:text-gray-400 text-[11px] sm:text-sm bg-transparent font-medium truncate'
                                     value={keyword}
                                     onChange={(e) => setKeyword(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && searchJobHandler()}
@@ -67,10 +69,12 @@ function HeroSection() {
                             </div>
 
                             {/* Experience Select */}
-                            <div className='flex items-center gap-3 w-full px-4 py-3 sm:py-2.5 border-b sm:border-b-0 sm:border-r border-gray-100'>
-                                <Briefcase className='w-5 h-5 text-[#0284C7] shrink-0' />
+                            <div className='flex items-center gap-1.5 sm:gap-3 w-1/3 min-w-0 px-2 sm:px-4 py-2.5 border-r border-gray-100'>
+                                <Briefcase className='w-4 h-4 sm:w-5 sm:h-5 text-[#0284C7] shrink-0' />
                                 <select 
-                                    className='outline-none border-none w-full text-gray-600 text-xs sm:text-sm bg-transparent font-medium cursor-pointer'
+                                    className='outline-none border-none w-full text-gray-600 text-[11px] sm:text-sm bg-transparent font-medium cursor-pointer truncate'
+                                    value={experience}
+                                    onChange={(e) => setExperience(e.target.value)}
                                 >
                                     <option value="">Experience</option>
                                     <option value="fresher">Fresher</option>
@@ -81,12 +85,12 @@ function HeroSection() {
                             </div>
 
                             {/* Location Input */}
-                            <div className='flex items-center gap-3 w-full px-4 py-3 sm:py-2.5'>
-                                <MapPin className='w-5 h-5 text-[#0284C7] shrink-0' />
+                            <div className='flex items-center gap-1.5 sm:gap-3 w-1/3 min-w-0 px-2 sm:px-4 py-2.5'>
+                                <MapPin className='w-4 h-4 sm:w-5 sm:h-5 text-[#0284C7] shrink-0' />
                                 <input 
                                     type="text"
-                                    placeholder='City or area...'
-                                    className='outline-none border-none w-full text-gray-900 placeholder:text-gray-400 text-xs sm:text-sm bg-transparent font-medium'
+                                    placeholder='City...'
+                                    className='outline-none border-none w-full text-gray-900 placeholder:text-gray-400 text-[11px] sm:text-sm bg-transparent font-medium truncate'
                                     value={location}
                                     onChange={(e) => setLocation(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && searchJobHandler()}
@@ -96,9 +100,10 @@ function HeroSection() {
                             {/* Search Button */}
                             <Button 
                                 onClick={searchJobHandler} 
-                                className='w-full sm:w-auto rounded-xl sm:rounded-full bg-[#0284C7] hover:bg-[#0270a6] text-white font-bold px-8 py-4 sm:py-6 cursor-pointer transition-transform active:scale-95 shrink-0 shadow-lg'
+                                className='rounded-xl sm:rounded-full bg-[#0284C7] hover:bg-[#0270a6] text-white font-bold px-3 sm:px-8 py-3.5 sm:py-6 text-xs sm:text-sm cursor-pointer transition-transform active:scale-95 shrink-0 shadow-lg'
                             >
-                                Search jobs
+                                <span className='hidden sm:inline'>Search jobs</span>
+                                <Search className='w-4 h-4 sm:hidden' />
                             </Button>
                         </div>
 

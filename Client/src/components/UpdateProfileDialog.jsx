@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog'
 import { Label } from './ui/label'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
-import { Loader2, User, Mail, Phone, FileText, Sparkles, Code2, Info } from 'lucide-react'
+import { Loader2, User, Mail, Phone, FileText, Sparkles, Code2, Info, Briefcase, Factory } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { USER_API_END_POINT } from '@/utils/constant'
@@ -20,9 +20,26 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         email: user?.email || "",
         phoneNumber: user?.phoneNumber || "",
         bio: user?.profile?.bio || "",
-        skills: user?.profile?.skills?.join(", ") || "",
+        experience: (user?.profile?.experience !== undefined && user?.profile?.experience !== null) ? user.profile.experience : "",
+        department: user?.profile?.department || "",
+        skills: user?.profile?.skills ? user.profile.skills.join(", ") : "",
         file: user?.profile?.resume || "",
     });
+
+    useEffect(() => {
+        if (user) {
+            setInput({
+                fullname: user?.fullname || "",
+                email: user?.email || "",
+                phoneNumber: user?.phoneNumber || "",
+                bio: user?.profile?.bio || "",
+                experience: (user?.profile?.experience !== undefined && user?.profile?.experience !== null) ? user.profile.experience : "",
+                department: user?.profile?.department || "",
+                skills: user?.profile?.skills ? user.profile.skills.join(", ") : "",
+                file: user?.profile?.resume || "",
+            });
+        }
+    }, [user, open]);
 
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
@@ -39,13 +56,16 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
 
         try {
             const formData = new FormData();
-            formData.append('fullname', input.fullname);
-            formData.append('email', input.email);
-            formData.append('phoneNumber', input.phoneNumber);
-            formData.append('bio', input.bio);
-            formData.append('skills', input.skills);
+            formData.append("fullname", input.fullname);
+            formData.append("email", input.email);
+            formData.append("phoneNumber", input.phoneNumber);
+            formData.append("bio", input.bio);
+            formData.append("experience", input.experience);
+            formData.append("department", input.department);
+            formData.append("skills", input.skills);
+            
             if (input.file && typeof input.file !== 'string') {
-                formData.append('file', input.file);
+                formData.append("file", input.file);
             }
 
             const response = await axios.post(`${USER_API_END_POINT}/profile/update`, formData, {
@@ -53,16 +73,16 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                     "Content-Type": "multipart/form-data",
                 },
                 withCredentials: true
-            })
+            });
 
             if (response.data.success) {
                 dispatch(setUser(response.data.user));
-                toast.success("Profile updated successfully!");
+                toast.success(response.data.message || "Profile updated successfully!");
                 setOpen(false);
             }
 
         } catch (error) {
-            console.log(error);
+            console.log("Profile update error:", error);
             toast.error(error.response?.data?.message || "Something went wrong!");
         } finally {
             setLoading(false);
@@ -71,12 +91,12 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="sm:max-w-[525px] bg-white rounded-2xl p-6 shadow-2xl border border-gray-100" onInteractOutside={() => setOpen(false)}>
+            <DialogContent className="sm:max-w-[525px] bg-white rounded-2xl p-6 shadow-2xl border border-gray-100">
                 <DialogHeader className="space-y-1">
                     <DialogTitle className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                        <Sparkles className="w-5 h-5 text-[#FFB703]" /> Update Profile
+                        <Sparkles className="w-5 h-5 text-[#FFB703]" /> Update B2B Industrial Profile
                     </DialogTitle>
-                    <p className="text-xs text-gray-500">Make changes to your professional profile and resume info here.</p>
+                    <p className="text-xs text-gray-500">Update your professional corporate credentials and resume info here.</p>
                 </DialogHeader>
 
                 <form onSubmit={submitHandler} className="mt-4">
@@ -129,6 +149,38 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                             />
                         </div>
 
+                        {/* Industrial Experience (Years) */}
+                        <div className='grid grid-cols-4 items-center gap-4'>
+                            <Label htmlFor="experience" className="text-right text-sm font-semibold text-gray-700 flex items-center justify-end gap-1">
+                                <Briefcase className="w-4 h-4 text-[#0284C7]" /> Experience
+                            </Label>
+                            <Input
+                                id="experience"
+                                className="col-span-3 border-gray-200 focus-visible:ring-[#0284C7]"
+                                name="experience"
+                                type="number"
+                                placeholder="Years of Industrial Experience (e.g., 3)"
+                                value={input.experience}
+                                onChange={changeEventHandler}
+                            />
+                        </div>
+
+                        {/* Department / Specialization */}
+                        <div className='grid grid-cols-4 items-center gap-4'>
+                            <Label htmlFor="department" className="text-right text-sm font-semibold text-gray-700 flex items-center justify-end gap-1">
+                                <Factory className="w-4 h-4 text-[#0284C7]" /> Department
+                            </Label>
+                            <Input
+                                id="department"
+                                className="col-span-3 border-gray-200 focus-visible:ring-[#0284C7]"
+                                name="department"
+                                type="text"
+                                placeholder="e.g., Quality Control, Supply Chain"
+                                value={input.department}
+                                onChange={changeEventHandler}
+                            />
+                        </div>
+
                         {/* Bio */}
                         <div className='grid grid-cols-4 items-center gap-4'>
                             <Label htmlFor="bio" className="text-right text-sm font-semibold text-gray-700 flex items-center justify-end gap-1">
@@ -153,7 +205,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                                 id="skills"
                                 className="col-span-3 border-gray-200 focus-visible:ring-[#0284C7]"
                                 name="skills"
-                                placeholder="HTML, CSS, JavaScript (comma separated)"
+                                placeholder="Machine Handling, ISO Standards (comma separated)"
                                 value={input.skills}
                                 onChange={changeEventHandler}
                             />

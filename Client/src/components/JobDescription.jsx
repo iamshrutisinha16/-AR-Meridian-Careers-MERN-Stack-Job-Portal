@@ -22,24 +22,52 @@ const JobDescription = () => {
   const params = useParams();
   const jobId = params.id;
 
-
   const applyJobHandler = async () => {
     try {
+      // 1. Check if user has uploaded a resume
+      if (!user?.profile?.resume) {
+        toast.error("Please upload your resume in your profile before applying!");
+        return;
+      }
+
+      // 2. Experience Eligibility Check
+      const userExp = user?.profile?.experience || 0;
+      const jobExp = singleJob?.experienceLevel || 0;
+      if (userExp < jobExp) {
+        toast.error(`Not Eligible: This job requires at least ${jobExp} years of experience.`);
+        return;
+      }
+
+      // 3. Profile Skills Matching Check
+      const userSkills = user?.profile?.skills?.map(skill => skill.toLowerCase()) || [];
+      const jobRequirements = singleJob?.requirements?.map(req => req.toLowerCase()) || [];
+
+      if (jobRequirements.length > 0) {
+        const hasMatchingSkill = jobRequirements.some(req => 
+          userSkills.some(skill => req.includes(skill) || skill.includes(req))
+        );
+
+        if (!hasMatchingSkill) {
+          toast.error("Not Eligible: Your profile skills do not match the job requirements.");
+          return;
+        }
+      }
+
+      // 4. API call for application submission if all checks pass
       const response = await axios.post(`${APPLICANT_API_END_POINT}/apply/${jobId}`, {}, {
         withCredentials: true
       })
 
       if (response.data.success) {
-        setIsApplied(true); // local state update
+        setIsApplied(true); 
         const updatedSingleJob = { ...singleJob, applications: [...singleJob.applications, { applicant: user?._id }] }
-        // real time ui update
         dispatch(setSingleJob(updatedSingleJob));
         toast.success(response.data.message);
       }
 
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   }
 
@@ -60,14 +88,10 @@ const JobDescription = () => {
     fetchSingleJobDescription();
   }, [jobId, dispatch, user?._id])
 
-
-
-
   return (
     <div>
       <Navbar />
       <div className='px-[6%] my-10'>
-
 
         <div className='flex items-center justify-between'>
           <div>
@@ -99,13 +123,9 @@ const JobDescription = () => {
           <h1 className='font-bold my-1'>Description: <span className='pl-4 font-normal text-gray-800'> {singleJob?.description} </span></h1>
           <h1 className='font-bold my-1'>Experience: <span className='pl-4 font-normal text-gray-800'>{singleJob?.experience} yrs</span></h1>
           <h1 className='font-bold my-1'>Salary: <span className='pl-4 font-normal text-gray-800'>{singleJob?.salary} LPA</span></h1>
-          <h1 className='font-bold my-1'>Total Applicaants: <span className='pl-4 font-normal text-gray-800'>{singleJob?.applications?.length}</span></h1>
-          <h1 className='font-bold my-1'>Posted Date: <span className='pl-4 font-normal text-gray-800'>{singleJob?.createdAt.split("T")[0]}</span></h1>
+          <h1 className='font-bold my-1'>Total Applicants: <span className='pl-4 font-normal text-gray-800'>{singleJob?.applications?.length}</span></h1>
+          <h1 className='font-bold my-1'>Posted Date: <span className='pl-4 font-normal text-gray-800'>{singleJob?.createdAt?.split("T")[0]}</span></h1>
         </div>
-
-
-
-
 
       </div>
     </div>
