@@ -32,11 +32,17 @@ const userSchema = new mongoose.Schema({
         profilePhoto: {
             type: String,
             default: "",
-        }
+        },
+        experience: { 
+            type: Number, 
+            default: 0 
+        },  // Naya field add kiya gaya hai
+        department: { 
+            type: String, 
+            default: "" 
+        }   // Naya field add kiya gaya hai
     },
 
+}, { timestamps: true });
 
-}, { timestamps: true })
-
-
-export const User = mongoose.model("User", userSchema) 
+export const User = mongoose.model("User", userSchema);
