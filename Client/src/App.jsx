@@ -1,4 +1,3 @@
-
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Navbar from './components/shared/Navbar'
 import Login from './components/auth/Login'
@@ -13,14 +12,13 @@ import CompanyCreate from './components/admin/CompanyCreate'
 import CompanySetup from './components/admin/CompanySetup'
 import AdminJobs from './components/admin/AdminJobs'
 import PostJob from './components/admin/PostJob'
+import Enquiries from './components/admin/Enquiries'
 import JobApplicants from './components/admin/JobApplicants'
 import ProtectedRoute from './components/admin/ProtectedRoute'
 
 const appRouter = createBrowserRouter([
 
   // for student role
-
-
   {
     path: '/',
     element: <Home />
@@ -50,8 +48,7 @@ const appRouter = createBrowserRouter([
     element: <Profile />
   },
 
-
-  // for admin role
+  // for admin / recruiter role
   {
     path: "/admin/companies",
     element: <ProtectedRoute><Companies /></ProtectedRoute>
@@ -76,14 +73,14 @@ const appRouter = createBrowserRouter([
     path: "/admin/jobs/:id/applicants",
     element: <ProtectedRoute><JobApplicants /></ProtectedRoute>
   },
-
-
+  {
+    path: "/admin/enquiries",
+    element: <ProtectedRoute><Enquiries /></ProtectedRoute>
+  }
 
 ])
 
 function App() {
-
-
   return (
     <>
       <RouterProvider router={appRouter} />

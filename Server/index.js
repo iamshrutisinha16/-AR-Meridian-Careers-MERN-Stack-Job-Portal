@@ -7,6 +7,7 @@ import userRouter from "./routes/user.routes.js";
 import companyRouter from "./routes/company.routes.js";
 import jobRouter from "./routes/job.routes.js";
 import applicantionRouter from "./routes/application.routes.js";
+import inquiryRoute from "./routes/inquiry.route.js"; 
 
 dotenv.config({});
 
@@ -19,7 +20,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-
 const allowedOrigins = [
     'https://ar-meridian-careers-mern-stack-job.vercel.app',
     'https://ar-meridian-careers-mern-stack-job-portal.vercel.app',
@@ -29,7 +29,6 @@ const allowedOrigins = [
 
 const corsOptions = {
     origin: function (origin, callback) {
-        // allow requests with no origin (like mobile apps or postman)
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
         } else {
@@ -50,6 +49,7 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/company", companyRouter);
 app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/application", applicantionRouter);
+app.use("/api/v1/inquiry", inquiryRoute); 
 
 app.listen(PORT, () => {
     console.log(`Server running at port ${PORT}`);
