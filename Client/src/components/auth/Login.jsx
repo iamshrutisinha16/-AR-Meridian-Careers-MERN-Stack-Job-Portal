@@ -37,10 +37,17 @@ const Login = () => {
         },
         withCredentials: true,
       });
+      
       if (response.data.success) {
         dispatch(setUser(response.data.user));
-        navigate("/");
         toast.success(response.data.message);
+
+        // 🔍 ROLE-BASED REDIRECTION:
+        if (response.data.user.role === 'recruiter') {
+          navigate("/admin/dashboard"); // Recruiter ke liye naya dashboard
+        } else {
+          navigate("/"); // Student ke liye normal home page
+        }
       }
     } catch (error) {
       console.log(error.message);
@@ -52,7 +59,12 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      navigate('/')
+      // Agar user pehle se logged-in hai toh role check karke redirect karein
+      if (user.role === 'recruiter') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/');
+      }
     }
   }, [user, navigate])
 

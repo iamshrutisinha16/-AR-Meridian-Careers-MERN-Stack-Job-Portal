@@ -15,7 +15,9 @@ import PostJob from './components/admin/PostJob'
 import Enquiries from './components/admin/Enquiries'
 import JobApplicants from './components/admin/JobApplicants'
 import ProtectedRoute from './components/admin/ProtectedRoute'
-
+import AdminDashboard from './components/admin/AdminDashboard' 
+import Database from './components/admin/Database'
+import Credits from './components/admin/Credits'
 const appRouter = createBrowserRouter([
 
   // for student role
@@ -50,6 +52,10 @@ const appRouter = createBrowserRouter([
 
   // for admin / recruiter role
   {
+    path: "/admin/dashboard",
+    element: <ProtectedRoute><AdminDashboard /></ProtectedRoute> // 👈 Naya Recruiter Home Dashboard Route
+  },
+  {
     path: "/admin/companies",
     element: <ProtectedRoute><Companies /></ProtectedRoute>
   },
@@ -64,6 +70,15 @@ const appRouter = createBrowserRouter([
   {
     path: "/admin/jobs",
     element: <ProtectedRoute><AdminJobs /></ProtectedRoute>
+  },
+  {
+    path: "/admin/database",
+    element: <ProtectedRoute><Database /></ProtectedRoute>
+  },
+
+   {
+    path: "/admin/credits",
+    element: <ProtectedRoute><Credits /></ProtectedRoute>
   },
   {
     path: "/admin/jobs/create",

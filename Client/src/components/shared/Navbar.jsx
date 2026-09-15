@@ -74,10 +74,10 @@ const Navbar = () => {
                         </div>
                         <div className='flex flex-col'>
                             <span className='font-black text-base sm:text-lg tracking-tight text-gray-900 dark:text-white leading-tight'>
-                                AR MERIDIAN
+                                AR Jobs
                             </span>
                             <span className='text-[10px] font-bold text-[#0284C7] tracking-wider uppercase'>
-                                Industrial & Careers
+                                Enterprise & Careers
                             </span>
                         </div>
                     </div>
