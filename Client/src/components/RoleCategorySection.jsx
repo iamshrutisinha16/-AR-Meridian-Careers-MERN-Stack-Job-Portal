@@ -6,6 +6,18 @@ import { motion } from 'framer-motion';
 import { Sparkles, ChevronRight } from 'lucide-react';
 
 const baseRoles = [
+    // Added IT Roles
+    { 
+        title: "Software Developer", 
+        keywords: ["software", "developer", "engineer", "fullstack", "backend", "java", "python"], 
+        image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80",
+    },
+    { 
+        title: "Web & App Development", 
+        keywords: ["frontend", "react", "ui", "javascript", "tailwind", "web"], 
+        image: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=600&q=80",
+    },
+    // Non-IT / Industrial Roles
     { 
         title: "B2B Sales & Distribution", 
         keywords: ["sales", "b2b", "dealer", "distribution", "executive"], 
@@ -30,16 +42,6 @@ const baseRoles = [
         title: "Bulk Fleet Driver", 
         keywords: ["driver", "transport", "chauffeur", "delivery", "fleet"], 
         image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=600&q=80",
-    },
-    { 
-        title: "Packaging Specialist", 
-        keywords: ["packer", "packaging", "bottling", "labeling", "filling"], 
-        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=600&q=80",
-    },
-    { 
-        title: "Facility Safety & Security", 
-        keywords: ["security", "guard", "safety", "watchman", "officer"], 
-        image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     },
     { 
         title: "Maintenance Technician", 
@@ -83,11 +85,11 @@ function RoleCategorySection() {
                     What kind of a role do you want?
                 </h2>
                 <p className="text-gray-500 text-xs sm:text-sm">
-                    Explore active openings matching your skill set and expertise.
+                    Explore active IT & Non-IT openings matching your skill set and expertise.
                 </p>
             </div>
 
-            {/* Grid - 4 Columns layout like reference */}
+            {/* Grid layout */}
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-5">
                 {dynamicRoles.map((role, index) => (
                     <motion.div 
@@ -97,7 +99,7 @@ function RoleCategorySection() {
                         onClick={() => handleRoleClick(role.title)}
                         className="bg-white border border-gray-200/90 rounded-2xl overflow-hidden shadow-xs hover:shadow-lg cursor-pointer transition-all flex flex-col group"
                     >
-                        {/* Proper Image Height matching reference proportion */}
+                        {/* Image */}
                         <div className="h-36 sm:h-40 overflow-hidden bg-gray-100">
                             <img 
                                 src={role.image} 

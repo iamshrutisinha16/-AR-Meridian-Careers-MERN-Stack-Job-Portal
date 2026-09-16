@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import useGetAllAdminJobs from '@/hooks/useGetAllAdminJobs';
 import { setSearchJobByText } from '@/redux/jobSlice';
-import { Search, Briefcase, PlusCircle, Bell, Home, Database, Building2, Coins, MoreHorizontal, Download, Moon, MapPin, Users, DollarSign, Calendar, Sparkles, ArrowRight, Eye, Trash2 } from 'lucide-react';
+import { Search, Briefcase, PlusCircle, Bell, Home, Database, Building2, Coins, MoreHorizontal, Download, Moon, MapPin, Users, DollarSign, Calendar, Sparkles, ArrowRight, Trash2, LogOut, Settings } from 'lucide-react';
 
 const AdminJobs = () => {
     useGetAllAdminJobs();
 
     const navigate = useNavigate();
+    const location = useLocation();
     const dispatch = useDispatch();
     
     const { user } = useSelector((store) => store.auth);
@@ -18,10 +19,8 @@ const AdminJobs = () => {
     
     const [input, setInput] = useState("");
     const [activeTab, setActiveTab] = useState('live');
-    
     const [openDropdownId, setOpenDropdownId] = useState(null);
 
-    // Real dynamic credits mapping
     const realCredits = user?.credits ?? user?.profile?.credits ?? 0;
 
     const getInitials = (name) => {
@@ -40,7 +39,6 @@ const AdminJobs = () => {
 
     const adminJobs = Array.isArray(allAdminJobs) ? allAdminJobs : [];
 
-    // Filter jobs based on search input
     const filteredJobs = adminJobs.filter((job) => {
         if (!searchJobByText) return true;
         return job?.title?.toLowerCase().includes(searchJobByText.toLowerCase()) ||
@@ -50,7 +48,7 @@ const AdminJobs = () => {
     return (
         <div className="flex h-screen bg-gray-100 font-sans overflow-hidden" onClick={() => setOpenDropdownId(null)}>
             
-            {/* 1. LEFT SIDEBAR */}
+            {/* 1. LEFT SIDEBAR (Matched exact with Dashboard) */}
             <aside className="w-64 bg-white border-r border-gray-200 flex flex-col justify-between hidden lg:flex">
                 <div>
                     {/* Brand / Logo */}
@@ -58,60 +56,89 @@ const AdminJobs = () => {
                         <div className="bg-blue-600 text-white font-bold p-2 rounded-lg text-xs">JOB</div>
                         <div>
                             <span className="font-extrabold text-blue-600 text-base">
-                                {user?.profile?.company?.name || user?.fullname || "Recruiter Portal"}
+                                {user?.fullname || "neha SINHA"}
                             </span>
-                            <span className="block text-[10px] text-gray-400 font-semibold uppercase tracking-wider">Recruiter</span>
+                            <span className="block text-[10px] text-gray-400 font-semibold uppercase tracking-wider">Admin Dashboard</span>
                         </div>
                     </div>
 
-                    {/* User Profile Card (Dynamic) */}
+                    {/* User Profile Card */}
                     <div className="p-4 border-b flex items-start justify-between">
                         <div>
                             <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 font-bold flex items-center justify-center text-sm mb-2">
                                 {getInitials(user?.fullname)}
                             </div>
-                            <h3 className="font-bold text-gray-800 text-sm">{user?.fullname || "User Name"}</h3>
-                            <p className="text-xs text-gray-500">{user?.phoneNumber || user?.email || "No Phone Number"}</p>
+                            <h3 className="font-bold text-gray-800 text-sm">{user?.fullname || "neha SINHA"}</h3>
+                            <p className="text-xs text-gray-500">{user?.phoneNumber || user?.email || "9693855983"}</p>
                         </div>
                         <button className="text-gray-400 hover:text-gray-600 cursor-pointer"><MoreHorizontal className="w-4 h-4" /></button>
                     </div>
 
                     {/* Navigation Links */}
                     <nav className="p-3 space-y-1">
-                        <button onClick={() => navigate("/admin/dashboard")} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 text-sm font-medium cursor-pointer">
-                            <Home className="w-4 h-4" /> Home
+                        <button 
+                            onClick={() => navigate("/admin/dashboard")} 
+                            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition cursor-pointer ${
+                                location.pathname === '/admin/dashboard' ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-600 hover:bg-gray-50'
+                            }`}
+                        >
+                            <Home className="w-4 h-4" /> Dashboard
                         </button>
-                        <button onClick={() => navigate("/admin/jobs")} className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg bg-blue-50 text-blue-600 font-semibold text-sm cursor-pointer">
-                            <div className="flex items-center gap-3"><Briefcase className="w-4 h-4" /> Jobs</div>
+                        
+                        <button 
+                            onClick={() => navigate("/admin/jobs")} 
+                            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-semibold transition cursor-pointer ${
+                                location.pathname.startsWith('/admin/jobs') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'
+                            }`}
+                        >
+                            <div className="flex items-center gap-3"><Briefcase className="w-4 h-4" /> Manage Jobs</div>
                             <PlusCircle className="w-3.5 h-3.5 text-blue-600" />
                         </button>
+
                         <button 
-                onClick={() => navigate('/admin/companies')}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
-                    location.pathname === '/admin/companies' ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-600 hover:bg-gray-50'
-                }`}
-            >
-                <Building2 className="w-4 h-4" /> Companies
-            </button>
-                        <button onClick={() => navigate("/admin/database")} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 text-sm font-medium cursor-pointer">
+                            onClick={() => navigate('/admin/companies')}
+                            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition cursor-pointer ${
+                                location.pathname === '/admin/companies' ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-600 hover:bg-gray-50'
+                            }`}
+                        >
+                            <Building2 className="w-4 h-4" /> Companies
+                        </button>
+
+                        <button 
+                            onClick={() => navigate("/admin/database")} 
+                            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition cursor-pointer ${
+                                location.pathname === '/admin/database' ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-600 hover:bg-gray-50'
+                            }`}
+                        >
                             <Database className="w-4 h-4" /> Database
                         </button>
-                        <div className="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 text-sm font-medium cursor-pointer">
+
+                        <button 
+                            onClick={() => navigate("/admin/credits")} 
+                            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition cursor-pointer ${
+                                location.pathname === '/admin/credits' ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-600 hover:bg-gray-50'
+                            }`}
+                        >
                             <div className="flex items-center gap-3"><Coins className="w-4 h-4" /> Credits</div>
                             <span className="text-xs font-bold text-amber-600">{realCredits}</span>
-                        </div>
+                        </button>
                     </nav>
                 </div>
 
-                {/* Sidebar Footer Promo */}
-                <div className="p-4 border-t">
+                {/* Sidebar Footer Promo & Actions */}
+                <div className="p-4 border-t space-y-3">
                     <div className="bg-purple-50 p-3 rounded-xl border border-purple-100 relative overflow-hidden">
                         <h4 className="text-xs font-bold text-purple-900 mb-1">Hire faster with Premium Jobs</h4>
                         <p className="text-[11px] text-purple-700">Contact us for pricing</p>
                     </div>
-                    <div className="mt-4 pt-3 border-t flex justify-between items-center text-xs text-gray-500">
-                        <span className="font-bold text-gray-700 uppercase">{user?.profile?.company?.name || "AR MERIDIAN"}</span>
-                        <span>Active Portal</span>
+                    
+                    <div className="flex items-center justify-between pt-1 text-xs text-gray-500 font-medium">
+                        <button onClick={() => navigate("/admin/profile")} className="flex items-center gap-1.5 hover:text-blue-600 cursor-pointer">
+                            <Settings className="w-3.5 h-3.5" /> Edit Profile
+                        </button>
+                        <button onClick={() => navigate("/login")} className="flex items-center gap-1.5 text-red-500 hover:text-red-700 cursor-pointer">
+                            <LogOut className="w-3.5 h-3.5" /> Logout
+                        </button>
                     </div>
                 </div>
             </aside>
@@ -119,7 +146,7 @@ const AdminJobs = () => {
             {/* 2. MAIN CONTENT AREA */}
             <main className="flex-1 flex flex-col h-screen overflow-y-auto bg-gray-50/50 overflow-x-hidden">
                 
-                {/* --- PROFESSIONAL NAVBAR --- */}
+                {/* --- PROFESSIONAL TOP NAVBAR (Matched EXACT with Dashboard) --- */}
                 <header className="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center sticky top-0 z-20 shadow-2xs">
                     
                     {/* Left: Company Logo & Title */}
@@ -129,14 +156,20 @@ const AdminJobs = () => {
                         </div>
                         <div>
                             <span className="font-black text-gray-900 text-sm tracking-tight block">
-                                {user?.profile?.company?.name || "AR Jobs"}
+                                AR Jobs
                             </span>
                             <span className="text-[10px] text-gray-400 font-semibold tracking-wider">Enterprise & Careers</span>
                         </div>
                     </div>
 
-                    {/* Center: Navigation Tabs */}
+                    {/* Center: Navigation Tabs (Exact same order as Dashboard) */}
                     <div className="hidden md:flex items-center bg-gray-100 p-1 rounded-full border border-gray-200">
+                        <button 
+                            onClick={() => navigate("/admin/dashboard")} 
+                            className="px-4 py-1.5 rounded-full text-xs font-semibold text-gray-600 hover:text-gray-900 cursor-pointer transition-all"
+                        >
+                            Dashboard
+                        </button>
                         <button 
                             onClick={() => navigate("/admin/companies")} 
                             className="px-4 py-1.5 rounded-full text-xs font-semibold text-gray-600 hover:text-gray-900 cursor-pointer transition-all"
@@ -150,26 +183,18 @@ const AdminJobs = () => {
                             Manage Jobs
                         </button>
                         <button 
-                            onClick={() => navigate("/admin/dashboard")} 
+                            onClick={() => navigate("/admin/database")} 
                             className="px-4 py-1.5 rounded-full text-xs font-semibold text-gray-600 hover:text-gray-900 cursor-pointer transition-all"
                         >
-                            Dashboard
+                            Database
                         </button>
                     </div>
 
-                    {/* Right: Real Credits, Get App, Theme & Profile/Notification */}
+                    {/* Right: Credits Badge & Profile Initial */}
                     <div className="flex items-center gap-3">
                         <div className="bg-amber-50 border border-amber-200 text-amber-800 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-2xs">
-                            <span>🪙</span> {realCredits} +
+                            <span>🪙</span> {realCredits}
                         </div>
-
-                        <button className="hidden sm:flex items-center gap-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer">
-                            <Download className="w-3.5 h-3.5 text-blue-600" /> GET APP
-                        </button>
-
-                        <button className="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 cursor-pointer">
-                            <Moon className="w-4 h-4" />
-                        </button>
 
                         <button className="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 cursor-pointer relative">
                             <Bell className="w-4 h-4" />
@@ -182,12 +207,13 @@ const AdminJobs = () => {
                     </div>
                 </header>
 
+                {/* Page Body Content */}
                 <div className='max-w-7xl w-full mx-auto px-6 py-8 space-y-6'>
                     
                     {/* Header Top & Post Job Button */}
                     <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
                         <div>
-                            <h1 className='text-2xl font-extrabold text-gray-900'>Jobs</h1>
+                            <h1 className='text-2xl font-extrabold text-gray-900'>Manage Jobs</h1>
                             <p className='text-xs text-gray-500 mt-0.5'>Create, filter, and track all job listings published by your enterprise.</p>
                         </div>
                         <Button 
@@ -273,7 +299,6 @@ const AdminJobs = () => {
                                                 <h3 className="font-extrabold text-gray-900 text-base">{job.title}</h3>
                                             </div>
 
-                                            {/* 3-Dot Action Button & Dropdown Box */}
                                             <div className="relative self-end sm:self-auto">
                                                 <button 
                                                     onClick={(e) => {
@@ -285,7 +310,6 @@ const AdminJobs = () => {
                                                     <MoreHorizontal className="w-5 h-5" />
                                                 </button>
 
-                                                {/* Dropdown Menu Popup */}
                                                 {isDropdownOpen && (
                                                     <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-xl z-30 py-1 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
                                                         <button 

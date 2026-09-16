@@ -5,17 +5,20 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { setSearchedQuery } from '@/redux/jobSlice'
 import { motion } from "framer-motion"
-import { Factory, FlaskConical, Truck, Briefcase, ShieldAlert, Sparkles, Building2, Wrench } from 'lucide-react'
+import { Factory, FlaskConical, Truck, Briefcase, ShieldAlert, Sparkles, Building2, Wrench, Code2, Laptop, Headphones, UserCheck } from 'lucide-react'
 
-// AR Meridian Manufacturing, B2B & Supply Chain Categories
+// AR Meridian IT & Non-IT Categories
 const categories = [
+    // IT Sectors
+    { title: "Software Development", icon: <Code2 className="w-4 h-4 text-indigo-600" /> },
+    { title: "Frontend / React Tech", icon: <Laptop className="w-4 h-4 text-indigo-600" /> },
+    // Non-IT Sectors
     { title: "B2B Sales & Distribution", icon: <Briefcase className="w-4 h-4 text-[#0284C7]" /> },
     { title: "Quality Control Chemist", icon: <FlaskConical className="w-4 h-4 text-[#0284C7]" /> },
     { title: "Factory Operations", icon: <Factory className="w-4 h-4 text-[#0284C7]" /> },
     { title: "Supply Chain & Logistics", icon: <Truck className="w-4 h-4 text-[#0284C7]" /> },
-    { title: "Plant Maintenance", icon: <Wrench className="w-4 h-4 text-[#0284C7]" /> },
+    { title: "Customer Support & HR", icon: <Headphones className="w-4 h-4 text-amber-600" /> },
     { title: "Facility Safety", icon: <ShieldAlert className="w-4 h-4 text-[#0284C7]" /> },
-    { title: "Corporate Business Dev", icon: <Building2 className="w-4 h-4 text-[#0284C7]" /> },
 ]
 
 const CategoryCarousel = () => {
@@ -54,12 +57,19 @@ const CategoryCarousel = () => {
             className="w-full py-12 px-4 bg-white border-y border-gray-100 my-6"
         >
             <div className="max-w-4xl mx-auto text-center mb-8">
-                <div className='inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-[#0284C7] text-xs font-bold mb-2'>
+                <div className='inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-[#0284C7] text-xs font-bold mb-3'>
                     <Sparkles className='w-3.5 h-3.5' />
                     <span>AR MERIDIAN DIVISIONS</span>
                 </div>
-                <h2 className="text-xl sm:text-2xl font-black text-gray-900">Explore Industrial & Commercial Roles</h2>
-                <p className="text-gray-500 text-xs sm:text-sm mt-1">Filter active openings across manufacturing plants, R&D labs, and B2B networks</p>
+
+                <div className="space-y-2">
+                    <h2 className="text-xl sm:text-2xl font-black text-gray-900 flex items-center justify-center gap-2">
+                        <span>Explore IT & Non-IT Career Streams</span>
+                    </h2>
+                    <p className="text-gray-500 text-xs sm:text-sm mt-1 leading-relaxed max-w-2xl mx-auto">
+                        Filter active openings seamlessly: <span className="text-indigo-600 font-bold bg-indigo-50 px-1.5 py-0.5 rounded">IT Domain</span> strictly for Software Engineering, Tech Stacks & Development — and <span className="text-amber-600 font-bold bg-amber-50 px-1.5 py-0.5 rounded">Non-IT Domain</span> for Operations, Sales, Marketing, HR & B2B networks.
+                    </p>
+                </div>
             </div>
 
             <Carousel setApi={setApi} className="w-full max-w-xl sm:max-w-3xl mx-auto relative px-8">

@@ -82,26 +82,28 @@ const Navbar = () => {
                         </div>
                     </div>
 
-                    {/* Desktop Nav Links */}
-                    <nav className='hidden md:flex items-center gap-1 bg-gray-50/80 dark:bg-gray-800/50 p-1.5 rounded-full border border-gray-200/60 dark:border-gray-700/60 shadow-inner'>
-                        {
-                            user && user.role === "recruiter"
-                                ? (
-                                    <>
-                                        <Link to="/admin/companies" className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${isActive('/admin/companies') ? 'bg-[#0284C7] text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:text-[#0284C7]'}`}>Companies</Link>
-                                        <Link to="/admin/jobs" className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${isActive('/admin/jobs') ? 'bg-[#0284C7] text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:text-[#0284C7]'}`}>Manage Jobs</Link>
-                                        <Link to="/admin/enquiries" className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${isActive('/admin/enquiries') ? 'bg-[#0284C7] text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:text-[#0284C7]'}`}>Enquiries</Link>
-                                    </>
-                                )
-                                : (
-                                    <>
-                                        <Link to="/" onClick={resetQuery} className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${isActive('/') ? 'bg-[#0284C7] text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:text-[#0284C7]'}`}>Home</Link>
-                                        <Link to="/jobs" className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${isActive('/jobs') ? 'bg-[#0284C7] text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:text-[#0284C7]'}`}>Find Jobs</Link>
-                                        <Link to="/browse" onClick={resetQuery} className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${isActive('/browse') ? 'bg-[#0284C7] text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:text-[#0284C7]'}`}>Browse</Link>
-                                    </>
-                                )
-                        }
-                    </nav>
+                    {/* Desktop Nav Links - Sirf tabhi dikhenge jab User logged-in ho */}
+                    {user && (
+                        <nav className='hidden md:flex items-center gap-1 bg-gray-50/80 dark:bg-gray-800/50 p-1.5 rounded-full border border-gray-200/60 dark:border-gray-700/60 shadow-inner'>
+                            {
+                                user.role === "recruiter"
+                                    ? (
+                                        <>
+                                            <Link to="/admin/companies" className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${isActive('/admin/companies') ? 'bg-[#0284C7] text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:text-[#0284C7]'}`}>Companies</Link>
+                                            <Link to="/admin/jobs" className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${isActive('/admin/jobs') ? 'bg-[#0284C7] text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:text-[#0284C7]'}`}>Manage Jobs</Link>
+                                            <Link to="/admin/enquiries" className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${isActive('/admin/enquiries') ? 'bg-[#0284C7] text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:text-[#0284C7]'}`}>Enquiries</Link>
+                                        </>
+                                    )
+                                    : (
+                                        <>
+                                            <Link to="/" onClick={resetQuery} className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${isActive('/') ? 'bg-[#0284C7] text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:text-[#0284C7]'}`}>Home</Link>
+                                            <Link to="/jobs" className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${isActive('/jobs') ? 'bg-[#0284C7] text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:text-[#0284C7]'}`}>Find Jobs</Link>
+                                            <Link to="/browse" onClick={resetQuery} className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${isActive('/browse') ? 'bg-[#0284C7] text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:text-[#0284C7]'}`}>Browse</Link>
+                                        </>
+                                    )
+                            }
+                        </nav>
+                    )}
 
                     {/* Right Action Items (Desktop & Tablet) */}
                     <div className='hidden sm:flex items-center gap-3'>
@@ -237,53 +239,54 @@ const Navbar = () => {
                 </div>
             </header>
 
-            {/* Mobile Bottom Navigation Bar */}
-            <div className='sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-t border-gray-200 dark:border-gray-800 shadow-lg px-4 py-2 flex items-center justify-around'>
-                {
-                    user && user.role === "recruiter"
-                        ? (
-                            <>
-                                <div onClick={() => navigate("/admin/companies")} className={`flex flex-col items-center gap-1 cursor-pointer ${isActive('/admin/companies') ? 'text-[#0284C7]' : 'text-gray-500 dark:text-gray-400'}`}>
-                                    <BuildingIcon className='w-5 h-5' />
-                                    <span className='text-[10px] font-semibold'>Companies</span>
-                                </div>
-                                <div onClick={() => navigate("/admin/jobs")} className={`flex flex-col items-center gap-1 cursor-pointer ${isActive('/admin/jobs') ? 'text-[#0284C7]' : 'text-gray-500 dark:text-gray-400'}`}>
-                                    <BriefcaseBusiness className='w-5 h-5' />
-                                    <span className='text-[10px] font-semibold'>Jobs</span>
-                                </div>
-                                {/* Naya Enquiries Tab */}
-                                <div onClick={() => navigate("/admin/enquiries")} className={`flex flex-col items-center gap-1 cursor-pointer ${isActive('/admin/enquiries') ? 'text-[#0284C7]' : 'text-gray-500 dark:text-gray-400'}`}>
-                                    <MessageSquare className='w-5 h-5' />
-                                    <span className='text-[10px] font-semibold'>Enquiries</span>
-                                </div>
-                            </>
-                        )
-                        : (
-                            <>
-                                <div onClick={() => { navigate("/"); resetQuery(); }} className={`flex flex-col items-center gap-1 cursor-pointer ${isActive('/') ? 'text-[#0284C7]' : 'text-gray-500 dark:text-gray-400'}`}>
-                                    <HomeIcon className='w-5 h-5' />
-                                    <span className='text-[10px] font-semibold'>Home</span>
-                                </div>
-                                <div onClick={() => navigate("/jobs")} className={`flex flex-col items-center gap-1 cursor-pointer ${isActive('/jobs') ? 'text-[#0284C7]' : 'text-gray-500 dark:text-gray-400'}`}>
-                                    <BriefcaseBusiness className='w-5 h-5' />
-                                    <span className='text-[10px] font-semibold'>Find Jobs</span>
-                                </div>
-                                <div onClick={() => { navigate("/browse"); resetQuery(); }} className={`flex flex-col items-center gap-1 cursor-pointer ${isActive('/browse') ? 'text-[#0284C7]' : 'text-gray-500 dark:text-gray-400'}`}>
-                                    <SearchCheck className='w-5 h-5' />
-                                    <span className='text-[10px] font-semibold'>Browse</span>
-                                </div>
-                            </>
-                        )
-                }
+            {/* Mobile Bottom Navigation Bar - Sirf tabhi dikhegi jab User logged-in ho */}
+            {user && (
+                <div className='sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-t border-gray-200 dark:border-gray-800 shadow-lg px-4 py-2 flex items-center justify-around'>
+                    {
+                        user.role === "recruiter"
+                            ? (
+                                <>
+                                    <div onClick={() => navigate("/admin/companies")} className={`flex flex-col items-center gap-1 cursor-pointer ${isActive('/admin/companies') ? 'text-[#0284C7]' : 'text-gray-500 dark:text-gray-400'}`}>
+                                        <BuildingIcon className='w-5 h-5' />
+                                        <span className='text-[10px] font-semibold'>Companies</span>
+                                    </div>
+                                    <div onClick={() => navigate("/admin/jobs")} className={`flex flex-col items-center gap-1 cursor-pointer ${isActive('/admin/jobs') ? 'text-[#0284C7]' : 'text-gray-500 dark:text-gray-400'}`}>
+                                        <BriefcaseBusiness className='w-5 h-5' />
+                                        <span className='text-[10px] font-semibold'>Jobs</span>
+                                    </div>
+                                    <div onClick={() => navigate("/admin/enquiries")} className={`flex flex-col items-center gap-1 cursor-pointer ${isActive('/admin/enquiries') ? 'text-[#0284C7]' : 'text-gray-500 dark:text-gray-400'}`}>
+                                        <MessageSquare className='w-5 h-5' />
+                                        <span className='text-[10px] font-semibold'>Enquiries</span>
+                                    </div>
+                                </>
+                            )
+                            : (
+                                <>
+                                    <div onClick={() => { navigate("/"); resetQuery(); }} className={`flex flex-col items-center gap-1 cursor-pointer ${isActive('/') ? 'text-[#0284C7]' : 'text-gray-500 dark:text-gray-400'}`}>
+                                        <HomeIcon className='w-5 h-5' />
+                                        <span className='text-[10px] font-semibold'>Home</span>
+                                    </div>
+                                    <div onClick={() => navigate("/jobs")} className={`flex flex-col items-center gap-1 cursor-pointer ${isActive('/jobs') ? 'text-[#0284C7]' : 'text-gray-500 dark:text-gray-400'}`}>
+                                        <BriefcaseBusiness className='w-5 h-5' />
+                                        <span className='text-[10px] font-semibold'>Find Jobs</span>
+                                    </div>
+                                    <div onClick={() => { navigate("/browse"); resetQuery(); }} className={`flex flex-col items-center gap-1 cursor-pointer ${isActive('/browse') ? 'text-[#0284C7]' : 'text-gray-500 dark:text-gray-400'}`}>
+                                        <SearchCheck className='w-5 h-5' />
+                                        <span className='text-[10px] font-semibold'>Browse</span>
+                                    </div>
+                                </>
+                            )
+                    }
 
-                {/* Profile Tab in Bottom Bar if user is logged in as student */}
-                {user && user.role === "student" && (
-                    <div onClick={() => navigate("/profile")} className={`flex flex-col items-center gap-1 cursor-pointer ${isActive('/profile') ? 'text-[#0284C7]' : 'text-gray-500 dark:text-gray-400'}`}>
-                        <User2 className='w-5 h-5' />
-                        <span className='text-[10px] font-semibold'>Profile</span>
-                    </div>
-                )}
-            </div>
+                    {/* Profile Tab in Bottom Bar if user is logged in as student */}
+                    {user.role === "student" && (
+                        <div onClick={() => navigate("/profile")} className={`flex flex-col items-center gap-1 cursor-pointer ${isActive('/profile') ? 'text-[#0284C7]' : 'text-gray-500 dark:text-gray-400'}`}>
+                            <User2 className='w-5 h-5' />
+                            <span className='text-[10px] font-semibold'>Profile</span>
+                        </div>
+                    )}
+                </div>
+            )}
         </>
     )
 }

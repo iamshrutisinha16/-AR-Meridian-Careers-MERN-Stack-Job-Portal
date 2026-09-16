@@ -11,7 +11,6 @@ import axios from 'axios';
 import { USER_API_END_POINT } from '@/utils/constant';
 
 const AdminDashboard = () => {
-    // Custom Hook to fetch admin jobs safely
     try {
         useGetAllAdminJobs();
     } catch (e) {
@@ -21,10 +20,8 @@ const AdminDashboard = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     
-    // Dropdown state
     const [dropdownOpen, setDropdownOpen] = useState(false);
     
-    // Safe Redux store extraction
     const authStore = useSelector((store) => store?.auth) || {};
     const jobStore = useSelector((store) => store?.job) || {};
     
@@ -33,7 +30,6 @@ const AdminDashboard = () => {
 
     const adminJobs = Array.isArray(allAdminJobs) ? allAdminJobs : [];
 
-    // Real calculations with safety checks
     const totalLiveJobs = adminJobs.length;
     
     let totalCandidates = 0;
@@ -72,7 +68,6 @@ const AdminDashboard = () => {
             .substring(0, 2);
     };
 
-    // Logout Handler (Safe and robust)
     const logoutHandler = async () => {
         try {
             await axios.get(`${USER_API_END_POINT}/logout`, { withCredentials: true });
@@ -80,6 +75,7 @@ const AdminDashboard = () => {
             console.log("Logout API error:", error);
         } finally {
             localStorage.clear();
+            sessionStorage.clear();
             navigate("/");
             window.location.reload();
         }
@@ -132,10 +128,15 @@ const AdminDashboard = () => {
                         <button onClick={() => navigate("/admin/database")} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 text-sm font-medium cursor-pointer">
                             <Database className="w-4 h-4" /> Database
                         </button>
-                        <div className="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 text-sm font-medium cursor-pointer">
+                        
+                        {/* Updated Credits Navigation Path */}
+                        <button 
+                            onClick={() => navigate("/admin/credits")} 
+                            className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 text-sm font-medium cursor-pointer"
+                        >
                             <div className="flex items-center gap-3"><Coins className="w-4 h-4" /> Credits</div>
                             <span className="text-xs font-bold text-amber-600">{realCredits}</span>
-                        </div>
+                        </button>
                     </nav>
                 </div>
 
@@ -155,7 +156,7 @@ const AdminDashboard = () => {
                         </button>
                         <button 
                             onClick={logoutHandler}
-                            className="text-xs text-red-600 hover:text-red-700 flex items-center gap-1 font-medium cursor-pointer"
+                            className="text-xs text-red-600 hover:text-red-700 flex items-center gap-1 font-medium cursor-pointer font-bold"
                         >
                             <LogOut className="w-3.5 h-3.5" /> Logout
                         </button>
@@ -174,9 +175,9 @@ const AdminDashboard = () => {
                         </div>
                         <div>
                             <span className="font-black text-gray-900 text-sm block">
-                                {user?.profile?.company?.name || "AR Admin Portal"}
+                                {user?.profile?.company?.name || "AR Jobs"}
                             </span>
-                            <span className="text-[10px] text-gray-400 font-semibold">Recruiter Admin Panel</span>
+                            <span className="text-[10px] text-gray-400 font-semibold">Enterprise & Careers</span>
                         </div>
                     </div>
 
@@ -188,7 +189,10 @@ const AdminDashboard = () => {
                     </div>
 
                     <div className="flex items-center gap-3 relative">
-                        <div className="bg-amber-50 border border-amber-200 text-amber-800 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5">
+                        <div 
+                            onClick={() => navigate("/admin/credits")}
+                            className="bg-amber-50 border border-amber-200 text-amber-800 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 cursor-pointer hover:bg-amber-100 transition-all"
+                        >
                             <span>🪙</span> {realCredits}
                         </div>
 
@@ -209,20 +213,17 @@ const AdminDashboard = () => {
                             </div>
 
                             {dropdownOpen && (
-                                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg py-2 z-50">
+                                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-2xl py-2 z-50">
                                     <div className="px-4 py-2 border-b border-gray-100">
                                         <p className="text-xs font-bold text-gray-800">{user?.fullname || "Admin"}</p>
                                         <p className="text-[11px] text-gray-400 truncate">{user?.email || "admin@domain.com"}</p>
                                     </div>
-                                    <button onClick={() => { setDropdownOpen(false); navigate("/admin/profile"); }} className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 flex items-center gap-2 cursor-pointer">
-                                        <User className="w-3.5 h-3.5 text-gray-400" /> Edit Profile
-                                    </button>
                                     <button onClick={() => { setDropdownOpen(false); navigate("/admin/jobs/create"); }} className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 flex items-center gap-2 cursor-pointer">
                                         <PlusCircle className="w-3.5 h-3.5 text-gray-400" /> Post New Job
                                     </button>
                                     <div className="border-t border-gray-100 my-1"></div>
-                                    <button onClick={() => { setDropdownOpen(false); logoutHandler(); }} className="w-full text-left px-4 py-2 text-xs text-red-600 hover:bg-red-50 flex items-center gap-2 cursor-pointer font-medium">
-                                        <LogOut className="w-3.5 h-3.5" /> Logout
+                                    <button onClick={() => { setDropdownOpen(false); logoutHandler(); }} className="w-full text-left px-4 py-2 text-xs text-red-600 hover:bg-red-50 flex items-center gap-2 cursor-pointer font-bold">
+                                        <LogOut className="w-3.5 h-3.5 text-red-600" /> Logout
                                     </button>
                                 </div>
                             )}
@@ -261,7 +262,7 @@ const AdminDashboard = () => {
                             <p className="text-gray-500 text-sm font-medium">Under Review Jobs</p>
                             <p className="text-3xl font-bold text-gray-900 mt-1">0</p>
                         </div>
-                        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-xs">
+                        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-xs cursor-pointer hover:border-amber-400 transition-all" onClick={() => navigate("/admin/credits")}>
                             <p className="text-gray-500 text-sm font-medium">Credits Available</p>
                             <p className="text-3xl font-bold text-amber-600 mt-1">{realCredits}</p>
                         </div>
@@ -328,7 +329,7 @@ const AdminDashboard = () => {
 
                     {/* Analytics Section */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-xs flex flex-col justify-between">
+                        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-xs flex flex-col justify-between cursor-pointer" onClick={() => navigate("/admin/credits")}>
                             <div className="flex justify-between items-center mb-4">
                                 <h3 className="font-bold text-gray-800">Credits Balance</h3>
                                 <Coins className="w-5 h-5 text-amber-500" />
@@ -338,7 +339,7 @@ const AdminDashboard = () => {
                                 <p className="text-xs text-gray-500 mt-1">Your Available Credits</p>
                             </div>
                             <div className="bg-amber-50 border border-amber-200 text-amber-800 text-xs p-2.5 rounded-lg text-center font-medium">
-                                Active recruiter subscription plan
+                                Active recruiter subscription plan (Click to manage)
                             </div>
                         </div>
 

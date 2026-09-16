@@ -8,9 +8,10 @@ import { motion } from 'framer-motion'
 import useGetAllJobs from '@/hooks/useGetAllJobs'
 import { setSearchedQuery } from '@/redux/jobSlice'
 import { Button } from './ui/button'
+import { Search, SlidersHorizontal, Briefcase } from 'lucide-react'
+import { Input } from './ui/input'
 
 function Jobs() {
-
     const dispatch = useDispatch();
 
     useGetAllJobs();
@@ -21,22 +22,19 @@ function Jobs() {
     useEffect(() => {
         if (!allJobs || allJobs.length === 0) return;
 
+        let result = allJobs;
+
         if (searchedQuery && searchedQuery.trim() !== "") {
             const query = searchedQuery.toLowerCase().trim();
-            
-            const filteredJob = allJobs.filter((job) => {
+            result = result.filter((job) => {
                 const jobLocation = job?.location?.toLowerCase() || "";
                 const jobTitle = job?.title?.toLowerCase() || "";
                 const jobDesc = job?.description?.toLowerCase() || "";
-                
-                // Agar query location ya title mein match karti hai, toh job dikhao
                 return jobLocation.includes(query) || jobTitle.includes(query) || jobDesc.includes(query);
             });
-
-            setFilterJobs(filteredJob);
-        } else {
-            setFilterJobs(allJobs);
         }
+
+        setFilterJobs(result);
     }, [allJobs, searchedQuery]);
 
     useEffect(() => {
@@ -46,50 +44,94 @@ function Jobs() {
     }, [dispatch]);
 
     return (
-        <>
+        <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
             <Navbar />
-            <div className='sm:px-[5%] max-sm:px-5 lg:px-[8%] my-6'>
-                <div className='sm:flex gap-6 mx-0 px-0 items-start'>
+            
+            <div className='max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 my-6 flex-1'>
+                
+                {/* Top Main Search Header (Job Hai Style) */}
+                <div className='bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/80 shadow-xs mb-6 flex flex-col md:flex-row items-center justify-between gap-4'>
+                    <div className='flex items-center gap-3 w-full md:w-auto'>
+                        <div className='p-2.5 bg-emerald-50 text-emerald-600 rounded-xl font-bold'>
+                            <Briefcase className='w-5 h-5' />
+                        </div>
+                        <div>
+                            <h1 className='text-base sm:text-lg font-extrabold text-gray-900'>
+                                {filterJobs.length} jobs near you
+                            </h1>
+                            <p className='text-xs text-gray-500'>Explore verified job opportunities</p>
+                        </div>
+                    </div>
+
+                    <div className='flex items-center gap-2 w-full md:w-[450px]'>
+                        <div className='relative w-full'>
+                            <Search className='absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400' />
+                            <Input 
+                                placeholder="Search jobs by title, role or city..." 
+                                className="pl-10 h-11 rounded-xl bg-gray-50/50 border-gray-200 text-xs focus-visible:ring-emerald-600"
+                                onChange={(e) => dispatch(setSearchedQuery(e.target.value))}
+                            />
+                        </div>
+                        
+                        {/* Mobile Filter Toggle */}
+                        <Button 
+                            onClick={() => setIsFilterBoxOpen(!isFilterBoxOpen)} 
+                            variant="outline" 
+                            className="md:hidden h-11 px-4 rounded-xl border-gray-200 text-xs font-bold flex items-center gap-2 shrink-0"
+                        >
+                            <SlidersHorizontal className='w-4 h-4' /> Filter
+                        </Button>
+                    </div>
+                </div>
+
+                {/* Main Content Layout: Left Filter Sidebar | Right Full-Width Jobs List */}
+                <div className='grid grid-cols-1 md:grid-cols-4 lg:grid-cols-12 gap-6 items-start'>
                     
-                    {/* Desktop Filter Sidebar */}
-                    <div className='sm:w-[240px] shrink-0 max-sm:hidden sticky top-20'>
+                    {/* 1. Left Filter Sidebar (3 Columns) */}
+                    <div className='hidden md:block md:col-span-1 lg:col-span-3 sticky top-20 bg-white p-4 rounded-2xl border border-gray-200/80 shadow-xs'>
                         <FilterCard />
                     </div>
 
-                    {/* Mobile Filter Toggle */}
-                    <div className='sm:hidden w-full mb-4'>
-                        <div className='text-right' onClick={() => setIsFilterBoxOpen(!isFilterBoxOpen)}>
-                            <Button className='bg-[#0284C7] text-white'>Filter</Button>
-                        </div>
-                        {
-                            isFilterBoxOpen && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: -10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className='my-3'
+                    {/* Mobile Filter Drawer */}
+                    {
+                        isFilterBoxOpen && (
+                            <div className='md:hidden fixed inset-0 z-50 bg-black/40 flex justify-end'>
+                                <motion.div 
+                                    initial={{ x: "100%" }}
+                                    animate={{ x: 0 }}
+                                    exit={{ x: "100%" }}
+                                    className='w-80 bg-white h-full p-5 overflow-y-auto shadow-xl'
                                 >
+                                    <div className='flex justify-between items-center mb-4 pb-2 border-b'>
+                                        <h2 className='font-bold text-gray-800 text-sm'>Filter Jobs</h2>
+                                        <button onClick={() => setIsFilterBoxOpen(false)} className='text-sm text-gray-500 font-bold'>✕ Close</button>
+                                    </div>
                                     <FilterCard />
                                 </motion.div>
-                            )
-                        }
-                    </div>
+                            </div>
+                        )
+                    }
 
-                    {/* Jobs Display Section */}
-                    <div className="flex-1 w-full">
+                    {/* 2. Middle & Right Combined: Jobs List Section taking full remaining width (9 Columns) */}
+                    <div className="md:col-span-3 lg:col-span-9 w-full flex flex-col gap-4">
+                        <h2 className='text-sm font-bold text-gray-700 mb-1'>Recommended jobs for you</h2>
                         {
                             filterJobs.length <= 0 ? (
-                                <div className='flex justify-center items-center h-60 text-gray-500 font-semibold text-lg'>
-                                    No Jobs Found
+                                <div className='flex flex-col justify-center items-center h-80 bg-white rounded-2xl border border-gray-200 text-gray-500 gap-2'>
+                                    <Briefcase className='w-10 h-10 text-gray-300' />
+                                    <p className='font-bold text-base text-gray-700'>No Jobs Found</p>
+                                    <p className='text-xs text-gray-400'>Try changing your filters or search keywords.</p>
                                 </div>
                             ) : (
-                                <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6'>
+                                <div className='flex flex-col gap-4 w-full'>
                                     {
                                         filterJobs.map((job) => (
                                             <motion.div
-                                                initial={{ opacity: 0, y: 20 }}
+                                                initial={{ opacity: 0, y: 15 }}
                                                 animate={{ opacity: 1, y: 0 }}
-                                                transition={{ duration: 0.3 }}
+                                                transition={{ duration: 0.2 }}
                                                 key={job._id}
+                                                className='w-full'
                                             >
                                                 <Job job={job} />
                                             </motion.div>
@@ -103,7 +145,7 @@ function Jobs() {
                 </div>
             </div>
             <Footer />
-        </>
+        </div>
     )
 }
 
