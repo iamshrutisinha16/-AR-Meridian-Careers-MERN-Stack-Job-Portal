@@ -21,8 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const allowedOrigins = [
-    'https://ar-meridian-careers-mern-stack-job.vercel.app',
-    'https://ar-meridian-careers-mern-stack-job-portal.vercel.app',
+    'https://ar-job-portal.vercel.app/p',
     'http://localhost:5173',
     'http://localhost:3000'
 ];
