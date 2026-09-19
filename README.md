@@ -81,7 +81,7 @@ The UI is built with **Tailwind CSS** and enhanced with **shadcn/ui** components
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/shubham79a/job-portal.git
+https://github.com/iamshrutisinha16/Ar-job-portal.git
 cd job-portal
 ```
 
@@ -125,8 +125,8 @@ npm start
 ```
 
 ### Open in browser:
-- **Frontend → http://localhost:5137**
-- **Backend → http://localhost:5000**
+- **Frontend → https://ar-job-portal.vercel.app/**
+- **Backend → https://ar-job-portal.onrender.com/**
 
 ---
 
@@ -138,8 +138,8 @@ npm start
 
 
 ## 👨‍💻 Author
-- **Made with 💙 by Shubham**
-- **🔗 Connect on [LinkedIn](https://www.linkedin.com/in/shubham-kumar-894799290/)
+- **Made with 💙 by Shruti sinha**
+- **🔗 Connect on [https://www.linkedin.com/in/shruti-sinha-0497082b2/)
 
 ---
 
